@@ -1,5 +1,11 @@
 ## Changelog
 
+### 0.1.1
+
+Bumped `atproto` library version. Skeets with video (a recently added feature)
+no longer cause exceptions.
+
+
 ### 0.1.0
 
 First release of `sopel-bsky`.
