@@ -42,7 +42,7 @@ keywords = [
 requires-python = ">=3.8, <4"
 dependencies = [
     "sopel>=8.0",
-    "atproto==0.0.55",  # upstream says <1.0 can have breaking changes any time
+    "atproto==0.0.62",  # upstream says <1.0 can have breaking changes any time
 ]
 
 [project.urls]
