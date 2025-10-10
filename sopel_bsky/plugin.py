@@ -18,11 +18,11 @@ from sopel.config.types import (
 from sopel.tools import time
 
 
-def _parse_utc_datetime(timestamp):
-    return datetime.strptime(
-        timestamp,
-        "%Y-%m-%dT%H:%M:%S.%fZ",
-    ).replace(tzinfo=timezone.utc)
+def _parse_iso_datetime(timestamp: str) -> datetime:
+    parsed = datetime.fromisoformat(timestamp)
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=timezone.utc)
+    return parsed
 
 
 class BskySection(StaticSection):
@@ -63,7 +63,7 @@ def skeet_info(bot, trigger):
     profile = client.get_profile(did)
 
     now = trigger.time
-    then = _parse_utc_datetime(post.value.created_at)
+    then = _parse_iso_datetime(post.value.created_at)
     timediff = (now - then).total_seconds()
 
     template = '{name} (@{handle}) | {reltime} | {text}'
