@@ -14,7 +14,7 @@ readme = { file=["README.md", "NEWS"], content-type="text/markdown" }
 
 [project]
 name = "sopel-bsky"
-version = "0.1.1"
+version = "0.1.2"
 description = "Fetch info about Bluesky links in your IRC conversations using Sopel."
 
 authors = [
@@ -38,10 +38,11 @@ keywords = [
   "irc",
 ]
 
-requires-python = ">=3.8, <4"
+requires-python = ">=3.8, <3.14"  # Should be synced with `atproto` below
 dependencies = [
     "sopel>=8.0",
-    "atproto==0.0.62",  # upstream says <1.0 can have breaking changes any time
+    # pin `atproto`: upstream says <1.0 can have breaking changes any time
+    "atproto==0.0.62",  # Should be synced with `requires-python` above
 ]
 
 [project.urls]
