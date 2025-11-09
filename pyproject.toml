@@ -1,4 +1,6 @@
 [build-system]
+# note: this package can't be *built* on py3.8 due to setuptools compatibility,
+# but it should *install* just fine
 requires = ["setuptools>=77.0.3", "wheel"]
 build-backend = "setuptools.build_meta"
 
@@ -41,8 +43,15 @@ keywords = [
 requires-python = ">=3.8, <3.14"  # Should be synced with `atproto` below
 dependencies = [
     "sopel>=8.0",
-    # pin `atproto`: upstream says <1.0 can have breaking changes any time
-    "atproto==0.0.62",  # Should be synced with `requires-python` above
+    # pin `atproto`: upstream says <1.0 can have breaking changes any time;
+    # also note the python version conditionals here and keep in sync with
+    # 'requires-python' above as things evolve
+    "atproto==0.0.62; python_version < '3.9'",  # last release to support py3.8
+    "atproto==0.0.63; python_version >= '3.9'",
+    # pydantic 2.11 dropped py3.8 support but older versions will still work,
+    # at the cost of slower startup times
+    "pydantic~=2.10.0; python_version < '3.9'",
+    "pydantic>=2.11; python_version >= '3.9'",
 ]
 
 [project.urls]
