@@ -71,14 +71,14 @@ def shutdown(bot):
 
 @plugin.output_prefix('[skeet] ')
 @plugin.url(
-    r'https?://bsky\.app/profile/(?P<handle>[^/]+)/post/(?P<post_id>[^/]+)')
+    r'https?://bsky\.app/profile/(?P<actor>[^/]+)/post/(?P<post_id>[^/]+)')
 def skeet_info(bot, trigger):
     while not (client := bot.memory['bsky_client']):
         time.sleep(1)
 
-    did = client.resolve_handle(trigger.group('handle')).did
-    post = client.get_post(trigger.group('post_id'), did)
-    profile = client.get_profile(did)
+    actor = trigger.group('actor')
+    post = client.get_post(trigger.group('post_id'), actor)
+    profile = client.get_profile(actor)
 
     now = trigger.time
     then = _parse_iso_datetime(post.value.created_at)
