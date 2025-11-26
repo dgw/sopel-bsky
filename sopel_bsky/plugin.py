@@ -5,6 +5,7 @@ Fetch info about Bluesky links in your IRC conversations using Sopel.
 from __future__ import annotations
 
 from datetime import datetime, timezone
+import re
 import threading
 import time
 
@@ -85,12 +86,30 @@ def skeet_info(bot, trigger):
     timediff = (now - then).total_seconds()
 
     template = '{name} (@{handle}) | {reltime} | {text}'
+    if '\n' in (text := post.value.text):
+        # I thought this was a micro-optimization, but testing with `timeit`
+        # shows that `in` is about 2 OOM faster than running the substitution if
+        # it's not needed:
+        #
+        # >>> timeit('"\\n" in s', 's = "\\n"')
+        # 0.022922827000002144
+        # >>> timeit('"\\n" in s', 's = "\\n"*1000')
+        # 0.03323874300076568
+        # >>> timeit('re.sub("\\n+", "f", s)', 'import re; s = "\\n"*1000')
+        # 1.3035988219999126
+        # >>> # the most damning one, where there are no newlines at all
+        # >>> timeit('re.sub("\\n+", "f", s)', 'import re; s = "n"*1000')
+        # 9.526578507999147
+        #
+        # So yeah, this optimization isn't *that* "micro" after all.
+        text = re.sub(r'\n+', ' ⏎ ', text)
+
     bot.say(
         template.format(
             name=profile.display_name,
             handle=profile.handle,
             reltime=tools_time.seconds_to_human(timediff),
-            text=post.value.text,
+            text=text,
         ),
         truncation=' […]',
     )
