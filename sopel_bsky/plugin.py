@@ -29,6 +29,10 @@ def _parse_iso_datetime(timestamp: str) -> datetime:
 class BskySection(StaticSection):
     handle = ValidatedAttribute('handle', default=NO_DEFAULT)
     password = SecretAttribute('password', default=NO_DEFAULT)
+    newline_replacement = ValidatedAttribute(
+        'newline_replacement',
+        default='⏎',
+    )
 
 
 def configure(config):
@@ -40,6 +44,11 @@ def configure(config):
     config.bsky.configure_setting(
         'password',
         'Bluesky account password:',
+    )
+    config.bsky.configure_setting(
+        'newline_replacement',
+        'Replacement character(s) for newlines in skeet text '
+        '(default: "⏎"; enter "off" to disable):',
     )
 
 
@@ -86,7 +95,8 @@ def skeet_info(bot, trigger):
     timediff = (now - then).total_seconds()
 
     template = '{name} (@{handle}) | {reltime} | {text}'
-    if '\n' in (text := post.value.text):
+    newline_repl = bot.config.bsky.newline_replacement.strip()
+    if '\n' in (text := post.value.text) and newline_repl.lower() != 'off':
         # I thought this was a micro-optimization, but testing with `timeit`
         # shows that `in` is about 2 OOM faster than running the substitution if
         # it's not needed:
@@ -102,7 +112,11 @@ def skeet_info(bot, trigger):
         # 9.526578507999147
         #
         # So yeah, this optimization isn't *that* "micro" after all.
-        text = re.sub(r'\n+', ' ⏎ ', text)
+        text = re.sub(
+            r'(?:\s+)?\n+',  # match trailing space before newlines too, if any
+            f' {newline_repl} ',
+            text,
+        )
 
     bot.say(
         template.format(
