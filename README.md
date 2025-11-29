@@ -23,10 +23,38 @@ The easiest way to configure `sopel-bsky` is via Sopel's configuration
 wizard—simply run `sopel-plugins configure bsky` and enter the values for which
 it prompts you.
 
+### Account login
+
 At present, you need to give the plugin a Bluesky account for which you don't
-mind the handle & password being stored in Sopel's config file in plain text.
+mind storing the `handle` & `password` in Sopel's config file in plain text.
 It's recommended to create a new account specifically for your bot, instead of
 using your real account's credentials (if you have one).
+
+### Output behavior
+
+These settings control how `sopel-bsky` displays skeet contents.
+
+#### `newline_replacement`
+
+_Default value:_ `"⏎"`
+
+Runs of one or more newlines in a skeet's text will be replaced with this
+string, wrapped in spaces. [For example][wilw-newline-test], the default value
+of `⏎` is used like this:
+
+```
+<Sopel> [skeet] Wil Wheaton (@wilwheaton.net) | 6 hours, 28 minutes ago |
+        Ranking Star Wars movies is a thing? ⏎ Okay, I'll get in on this. ⏎ 1.
+        Empire Strikes Back ⏎ 2. Star Wars 1977 theatrical release ⏎ 3. Rogue
+        One ⏎ 4. Return of the Jedi (because I was 11) ⏎ Everything else is
+        somewhere between "meh" and "why. why. y u do dis?" [sad kitten dot jpg]
+```
+
+The special value `off` will disable newline substitution. Note that leading &
+trailing spaces in the value you enter will be ignored; this is a limitation of
+Sopel's config format and parser.
+
+[wilw-newline-test]: https://bsky.app/profile/wilwheaton.net/post/3m6iac7rms22v
 
 ## Maintenance Note
 
