@@ -1,5 +1,22 @@
 ## Changelog
 
+### 0.2.0
+
+Added:
+
+* Configurable replacement character for newlines in skeet text (#11, #12)
+
+Fixed:
+
+* Fix handling of skeet links using DID instead of handle (#10)
+
+General:
+
+* Updated `atproto` library version for Python 3.9+ (#6)
+* Require newer, faster-to-start `pydantic` on supported Python versions (#6)
+* Lazy-load `atproto` at plugin startup (#7)
+
+
 ### 0.1.2
 
 * Bumped `atproto` library version

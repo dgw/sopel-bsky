@@ -16,7 +16,7 @@ readme = { file=["README.md", "NEWS"], content-type="text/markdown" }
 
 [project]
 name = "sopel-bsky"
-version = "0.1.2"
+version = "0.2.0"
 description = "Fetch info about Bluesky links in your IRC conversations using Sopel."
 
 authors = [
